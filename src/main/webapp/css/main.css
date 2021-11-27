@@ -1,12 +1,24 @@
-label {
-	display: block;
-	width: 100px;
-	float: left;	
+@charset "ISO-8859-1";
+
+.oikealle{
+	text-align: right;
 }
-input {
-	margin-bottom:5px;
+body {
+	font-family: sans-serif;
+}
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+table {
+  width: 80%;
+  border-collapse: collapse;
+
+}
+tr:hover {background-color: #ECF2DD;}
+
+.otsikko {
+	font-weight: bold;
+	background-color: #b0d4de;  
 }
 
-table, th, td {
-  border: 1px solid black;
-}
