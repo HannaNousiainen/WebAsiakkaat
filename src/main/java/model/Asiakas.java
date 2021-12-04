@@ -1,11 +1,11 @@
 package model;
 
 public class Asiakas {
-	
 	private int asiakas_id;
 	private String etunimi, sukunimi, puhelin, sposti;
 	public Asiakas() {
-		super();		
+		super();
+		// TODO Auto-generated constructor stub
 	}
 	public Asiakas(int asiakas_id, String etunimi, String sukunimi, String puhelin, String sposti) {
 		super();
@@ -51,5 +51,4 @@ public class Asiakas {
 				+ puhelin + ", sposti=" + sposti + "]";
 	}
 	
-
 }
