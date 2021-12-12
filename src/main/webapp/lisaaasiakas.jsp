@@ -7,54 +7,22 @@
 <script src="scripts/main.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
-<title>Lis‰‰ asiakas</title>
-<style>
-
-.oikealle{
-	text-align: right;
-}
-.poista{
-	color: red;
-	text-decoration: underline;
-	cursor: pointer;	
-}
-body {
-	font-family: sans-serif;
-}
-th, td {
-  padding: 8px;
-  text-align: left;
-}
-table {
-  width: 60%;
-  border-collapse: collapse;
-
-}
-tr:hover {background-color: #ECF2DD;}
-
-.otsikko {
-	font-weight: bold;
-	background-color: #b0d4de;  
-}
-
-#takaisin{
-	cursor: pointer;	
-}
-
-</style>
+<link rel="stylesheet" type="text/css" href="css/main.css">
+<title>Asiakkaan lis‰‰minen</title>
 </head>
 <body>
+<form id="tiedot" action="lisaaasiakas" method="post">
 <form id="tiedot">
 	<table>
 	<thead>
 		<tr>
-			<th colspan="5" class="oikealle"><span id="takaisin">Takaisin listaukseen</span></th>
+			<th colspan="5" class="oikealle"><a href="listaaasiakkaat.jsp">Takaisin listaukseen</a></th>
 		</tr>
-		<tr class="otsikko">
+		<tr>
 			<th>Etunimi</th>
 			<th>Sukunimi</th>
 			<th>Puhelin</th>
-			<th>S‰hkˆposti</th>
+			<th>Sposti</th>
 			<th></th>
 		</tr>
 	</thead>
@@ -64,73 +32,40 @@ tr:hover {background-color: #ECF2DD;}
 			<td><input type="text" name="sukunimi" id="sukunimi"></td>
 			<td><input type="text" name="puhelin" id="puhelin"></td>
 			<td><input type="text" name="sposti" id="sposti"></td> 
-			<td><input type="submit" id="tallenna" value="Lis‰‰"></td>
+			<td><input type="button" id="tallenna" value="Lis‰‰" onclick="tarkasta()"></td>
 		</tr>
 	</tbody>
 </table>
 </form>
 <span id="ilmo"></span>
 <script>
-$(document).ready(function(){
-	$("#takaisin").click(function(){
-		document.location="listaa.jsp";
-	});
-	//Lomakkeen tietojen tarkistus. Kun lomakkeen kaikki tiedot ovat ok, kutsutaan lisaaTiedot()-funktiota
-	$("#tiedot").validate({						
-		rules: {
-			etunimi:  {
-				required: true,				
-				minlength: 2				
-			},	
-			sukunimi:  {
-				required: true,				
-				minlength: 2				
-			},
-			puhelin:  {
-				required: true,
-				minlength: 5
-			},	
-			sposti:  {
-				required: true,
-				email: true				
-			}	
-		},
-		messages: {
-			etunimi: {     
-				required: "Puuttuu",				
-				minlength: "Liian lyhyt"			
-			},
-			sukunimi: {
-				required: "Puuttuu",				
-				minlength: "Liian lyhyt"
-			},
-			puhelin: {
-				required: "Puuttuu",
-				minlength: "Liian lyhyt"
-			},
-			sposti: {
-				required: "Puuttuu",
-				email: "Ei kelpaa"
-			}
-		},			
-		submitHandler: function(form) {	
-			lisaaTiedot();
-		}		
-	});  
-	//Vied‰‰n kursori etunimi-kentt‰‰n sivun latauksen yhteydess‰
-	$("#etunimi").focus(); 
-});
-function lisaaTiedot(){
-	var formJsonStr = formDataJsonStr($("#tiedot").serializeArray()); //muutetaan lomakkeen tiedot json-stringiksi
-	console.log(formJsonStr);
-	$.ajax({url:"asiakkaat", data:formJsonStr, type:"POST", dataType:"json", success:function(result) { //result on joko {"response:1"} tai {"response:0"}       
-		if(result.response==0){
-        	$("#ilmo").html("Asiakkaan lis‰‰minen ep‰onnistui.");
-        }else if(result.response==1){			
-        	$("#ilmo").html("Asiakkaan lis‰‰minen onnistui.");
-        	$("#etunimi, #sukunimi, #puhelin, #sposti").val("");
-		}
-    }});	
+function tarkasta(){
+	var d = new Date();
+	if(document.getElementById("etunimi").value.length<3){
+		document.getElementById("ilmo").innerHTML="Etunimi ei kelpaa!";
+		return;
+	}else if(document.getElementById("sukunimi").value.length<2){
+		document.getElementById("ilmo").innerHTML="Sukunimi ei kelpaa!";
+		return;
+	}else if(document.getElementById("puhelin").value.length<1){
+		document.getElementById("ilmo").innerHTML="Puhelinnumero ei kelpaa!";
+		return;
+	}else if(document.getElementById("sposti").value.length<5){
+		document.getElementById("ilmo").innerHTML="S‰hkˆposti ei kelpaa";
+		return;
+	}
+	document.getElementById("etunimi").value=siivoa(document.getElementById("etunimi").value);
+	document.getElementById("sukunimi").value=siivoa(document.getElementById("sukunimi").value);
+	document.getElementById("puhelin").value=siivoa(document.getElementById("puhelin").value);
+	document.getElementById("sposti").value=siivoa(document.getElementById("sposti").value);
+	document.forms["tiedot"].submit();
+}
+
+function siivoa(teksti){
+	teksti=teksti.replace("<","");
+	teksti=teksti.replace(";","");
+	teksti=teksti.replace("'","''");
+	return teksti;
 }
 </script>
 </body>
